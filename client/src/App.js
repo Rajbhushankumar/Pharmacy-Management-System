@@ -17,6 +17,11 @@ import ManageUsers from "./pages/ManageUsers";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
+// API base URL configuration
+const API_BASE_URL = process.env.NODE_ENV === 'production' 
+  ? '/api'  // In production, use relative path
+  : 'http://localhost:5000/api';  // In development, use local server
+
 const AppLayout = ({ children }) => {
   const location = useLocation();
   const hideLayout = ["/auth", "/forgot-password", "/reset"].some(path =>
