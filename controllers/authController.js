@@ -80,13 +80,16 @@ exports.forgotPassword = async (req, res) => {
     user.resetTokenUsed = false;
     await user.save();
 
-    // In a production environment, you would send an email here
-    // For development, we'll log the reset link
-    const resetLink = `http://localhost:5000/reset/${resetToken}`;
+    // Generate reset link based on environment
+    const baseUrl = process.env.NODE_ENV === 'production' 
+      ? process.env.FRONTEND_URL || 'https://rajbhushankumar.github.io/Pharmacy-Management-System'
+      : 'http://localhost:3000';
+    
+    const resetLink = `${baseUrl}/reset/${resetToken}`;
     console.log(`\nPassword Reset Link (copy and paste this in your browser):\n${resetLink}\n`);
 
     res.status(200).json({ 
-      message: "Reset link sent. Check console for development mode.",
+      message: "Reset link generated successfully",
       resetLink // Only for development
     });
   } catch (err) {
@@ -99,6 +102,11 @@ exports.forgotPassword = async (req, res) => {
 exports.resetPassword = async (req, res) => {
   const { token, newPassword } = req.body;
   try {
+    // Validate password
+    if (!newPassword || newPassword.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters long" });
+    }
+
     const user = await User.findOne({
       resetToken: token,
       resetTokenExpiry: { $gt: new Date() },
