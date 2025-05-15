@@ -18,7 +18,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
 // API base URL configuration
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
+export const API_BASE_URL = process.env.NODE_ENV === 'production' 
   ? '/api'  // In production, use relative path
   : 'http://localhost:5000/api';  // In development, use local server
 
