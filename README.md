@@ -39,4 +39,4 @@ A comprehensive pharmacy management system built with Node.js and Express.js.
 
 ## License
 
-MIT 
+MIT
