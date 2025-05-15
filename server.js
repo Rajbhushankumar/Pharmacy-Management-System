@@ -18,14 +18,20 @@ app.use("/api/customers", require("./routes/customerRoutes"));
 app.use("/api/invoices", require("./routes/invoiceRoutes"));
 
 // Serve static files from the React app
+const buildPath = path.join(__dirname, "client", "build");
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, "client/build")));
+  // Check if build directory exists
+  if (require('fs').existsSync(buildPath)) {
+    app.use(express.static(buildPath));
 
-  // The "catchall" handler: for any request that doesn't
-  // match one above, send back React's index.html file.
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "client/build", "index.html"));
-  });
+    // The "catchall" handler: for any request that doesn't
+    // match one above, send back React's index.html file.
+    app.get("*", (req, res) => {
+      res.sendFile(path.join(buildPath, "index.html"));
+    });
+  } else {
+    console.warn("Build directory not found. Make sure to run 'npm run build' in the client directory.");
+  }
 }
 
 // MongoDB Connection
